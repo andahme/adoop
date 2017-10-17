@@ -1,13 +1,18 @@
 ARG INPUT_HADOOP_VERSION=2.8.1
 
+ARG INPUT_HADOOP_ARTIFACT=http://apache.spinellicreations.com/hadoop/common/hadoop-${INPUT_HADOOP_VERSION}/hadoop-${INPUT_HADOOP_VERSION}.tar.gz
+
 
 # TARGET: DISTRIBUTION
 FROM andahme/debian AS distribution
 
+ARG INPUT_HADOOP_ARTIFACT
+
 ARG INPUT_HADOOP_VERSION
 
 
-COPY hadoop-${INPUT_HADOOP_VERSION}.tar.gz /tmp
+
+COPY ${INPUT_HADOOP_ARTIFACT} /tmp/hadoop-${INPUT_HADOOP_VERSION}.tar.gz
 
 RUN tar -zxf /tmp/hadoop-${INPUT_HADOOP_VERSION}.tar.gz -C /opt --strip-component=1
 

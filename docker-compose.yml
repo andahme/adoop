@@ -6,7 +6,7 @@ networks:
 
 
 services:
-  namenode:
+  NameNode:
     command: namenode
     environment:
       CORE_SITE__FS_DEFAULTFS: "hdfs://namenode:9000"
@@ -14,18 +14,19 @@ services:
     hostname: namenode
     image: andahme/hadoop
     networks:
-      - hdpn
+      hdpn:
+        aliases:
+          - namenode
     ports:
       - 9000:9000
       - 50070:50070
     volumes:
-      - namenode-data:/tmp/hadoop-root/dfs/name
+      - NameNode-data:/tmp/hadoop-root/dfs/name
 
-  datanode:
+  DataNode:
     command: datanode
     environment:
       CORE_SITE__FS_DEFAULTFS: "hdfs://namenode:9000"
-    hostname: datanode
     image: andahme/hadoop
     networks:
       - hdpn
@@ -34,25 +35,26 @@ services:
       - 50020:50020
       - 50075:50075
     volumes:
-      - datanode-data:/tmp/hadoop-root/dfs/data
+      - DataNode-data:/tmp/hadoop-root/dfs/data
 
-  resourcemanager:
+  ResourceManager:
     command: resourcemanager
     environment:
       MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME: "yarn"
     hostname: resourcemanager
     image: andahme/hadoop
     networks:
-      - hdpn
+      hdpn:
+        aliases:
+          - resourcemanager
     ports:
       - 8030-8033:8030-8033
       - 8088:8088
 
-  nodemanager:
+  NodeManager:
     command: nodemanager
     environment:
       YARN_SITE__YARN_RESOURCEMANAGER_HOSTNAME: "resourcemanager"
-    hostname: nodemanager
     image: andahme/hadoop
     networks:
       - hdpn
@@ -61,6 +63,6 @@ services:
 
 
 volumes:
-  namenode-data:
-  datanode-data:
+  NameNode-data:
+  DataNode-data:
 

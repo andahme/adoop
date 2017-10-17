@@ -11,7 +11,7 @@ if [ ${HDFS_SITE__DFS_REPLICATION} ]; then
     sed s/%%HDFS_SITE__DFS_REPLICATION%%/${HDFS_SITE__DFS_REPLICATION}/g ${HADOOP_HOME}/etc/hadoop/hdfs-site.xml.template > ${HADOOP_HOME}/etc/hadoop/hdfs-site.xml
 fi
 
-if [ ${MAPRED_SITE__YARN_RESOURCEMANAGER_HOSTNAME} ]; then
+if [ ${MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME} ]; then
     echo "ANDAHME Applying Configuration - MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME (${MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME})"
     sed s/%%MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME%%/${MAPRED_SITE__MAPREDUCE_FRAMEWORK_NAME}/g ${HADOOP_HOME}/etc/hadoop/mapred-site.xml.template > ${HADOOP_HOME}/etc/hadoop/mapred-site.xml
 fi
@@ -31,27 +31,27 @@ case ${COMMAND} in
         fi
 
         echo ANDAHME Starting NameNode...
-        ${HADOOP_HOME}/bin/hdfs namenode
+        exec ${HADOOP_HOME}/bin/hdfs namenode
         ;;
 
     secondarynamenode)
         echo ANDAHME Starting SecondaryNameNode...
-        ${HADOOP_HOME}/bin/hdfs secondarynamenode
+        exec ${HADOOP_HOME}/bin/hdfs secondarynamenode
         ;;
 
     datanode)
         echo ANDAHME Starting DataNode...
-        ${HADOOP_HOME}/bin/hdfs datanode
+        exec ${HADOOP_HOME}/bin/hdfs datanode
         ;;
 
     resourcemanager)
         echo ANDAHME Starting ResourceManager...
-        ${HADOOP_HOME}/bin/yarn resourcemanager
+        exec ${HADOOP_HOME}/bin/yarn resourcemanager
         ;;
 
     nodemanager)
         echo ANDAHME Starting NodeManager...
-        ${HADOOP_HOME}/bin/yarn nodemanager
+        exec ${HADOOP_HOME}/bin/yarn nodemanager
         ;;
 
     *)
