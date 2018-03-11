@@ -1,0 +1,52 @@
+services:
+  metastore-db:
+    image: andahme/postgres:10
+
+  hive-metastore-db-schema:
+    command: hive --service schemaTool --dbType postgres --initSchema
+    image: adoop/hive:${ADOOP_VERSION}
+    environment:
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONURL: jdbc:postgresql://metastore-db/postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONDRIVERNAME: org.postgresql.Driver
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONUSERNAME: postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONPASSWORD: 2345
+
+  hive-metastore:
+    depends_on:
+      - metastore-db
+      - name-node
+    image: adoop/hive-metastore:${ADOOP_VERSION}
+    environment:
+      HIVE_SITE__HIVE_METASTORE_WAREHOUSE_DIR: hdfs://name-node:9000/user/hive/warehouse
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONURL: jdbc:postgresql://metastore-db/postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONDRIVERNAME: org.postgresql.Driver
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONUSERNAME: postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONPASSWORD: 2345
+
+  hive-server:
+    depends_on:
+      - hive-metastore
+      - name-node
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+      HIVE_SITE__HIVE_METASTORE_URIS: thrift://hive-metastore:9083
+      HIVE_SITE__HIVE_SERVER2_ENABLE_DOAS: "false"
+    image: adoop/hive-server:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:10002:10002
+
+  init-hdfs-hive:
+    command: /workspace/init-hdfs.sh
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs:${ADOOP_VERSION}
+    volumes:
+      - ${PWD}/hive:/workspace
+
+  beeline:
+    command: beeline -u jdbc:hive2://hive-server:10000 -n anonymous
+    image: adoop/hive:${ADOOP_VERSION}
+
+
+version: '2.3'
+

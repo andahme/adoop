@@ -1,0 +1,47 @@
+services:
+  name-node:
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs-name-node:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:50070:50070
+    volumes:
+      - name-node:/data/dfs/name
+
+  name-node-format:
+    command: hdfs namenode -format
+    image: adoop/hdfs-name-node:${ADOOP_VERSION}
+    volumes:
+      - name-node:/data/dfs/name
+
+  secondary-name-node:
+    depends_on:
+      - name-node
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs-secondary-name-node:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:50090:50090
+
+  data-node:
+    depends_on:
+      - name-node
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs-data-node:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:50075:50075
+
+  init-hdfs-base:
+    command: /workspace/init-hdfs.sh
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs:${ADOOP_VERSION}
+    volumes:
+      - ${PWD}/hdfs:/workspace
+
+volumes:
+  name-node:
+
+version: '2.3'
+

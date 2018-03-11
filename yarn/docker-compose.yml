@@ -1,0 +1,24 @@
+services:
+  resource-manager:
+    depends_on:
+      - name-node
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/yarn-resource-manager:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:8088:8088
+
+  node-manager:
+    depends_on:
+      - name-node
+      - resource-manager
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+      YARN_SITE__YARN_RESOURCEMANAGER_HOSTNAME: resource-manager
+    image: adoop/yarn-node-manager:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:8042:8042
+
+
+version: '2.3'
+

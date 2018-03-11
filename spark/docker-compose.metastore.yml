@@ -1,0 +1,15 @@
+services:
+  metastore-db:
+    image: andahme/postgres:10
+
+  spark-shell:
+    environment:
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONURL: jdbc:postgresql://metastore-db/postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONDRIVERNAME: org.postgresql.Driver
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONUSERNAME: postgres
+      HIVE_SITE__JAVAX_JDO_OPTION_CONNECTIONPASSWORD: 2345
+      SPARK_DEFAULTS__SPARK_SQL_WAREHOUSE_DIR: hdfs://name-node:9000/user/spark/warehouse
+
+
+version: '2.3'
+

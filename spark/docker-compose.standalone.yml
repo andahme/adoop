@@ -1,0 +1,22 @@
+services:
+  spark-master:
+    image: adoop/spark-master:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:8080:8080
+
+  spark-worker:
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_DEFAULTS__SPARK_MASTER: spark://spark-master:7077
+    image: adoop/spark-worker:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:8081:8081
+
+  spark-shell:
+    environment:
+      SPARK_DEFAULTS__SPARK_MASTER: spark://spark-master:7077
+
+
+version: '2.3'
+

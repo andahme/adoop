@@ -1,0 +1,21 @@
+services:
+  spark-shell:
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/spark-shell:${ADOOP_VERSION}
+    ports:
+      - 127.0.0.1:4040:4040
+    volumes:
+      - ${PWD}:/workspace
+
+  init-hdfs-spark:
+    command: /workspace/init-hdfs.sh
+    environment:
+      CORE_SITE__FS_DEFAULTFS: hdfs://name-node:9000
+    image: adoop/hdfs:${ADOOP_VERSION}
+    volumes:
+      - ${PWD}/spark:/workspace
+
+
+version: '2.3'
+

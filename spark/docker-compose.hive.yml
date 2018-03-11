@@ -1,0 +1,9 @@
+services:
+  spark-shell:
+    environment:
+      HIVE_SITE__HIVE_METASTORE_URIS: thrift://hive-metastore:9083
+      HIVE_SITE__HIVE_SERVER2_ENABLE_DOAS: "false"
+
+
+version: '2.3'
+

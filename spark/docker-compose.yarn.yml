@@ -1,0 +1,10 @@
+services:
+  spark-shell:
+    environment:
+      SPARK_DEFAULTS__SPARK_MASTER: yarn
+      SPARK_DEFAULTS__SPARK_YARN_AM_MEMORY: 1g
+      YARN_SITE__YARN_RESOURCEMANAGER_HOSTNAME: resource-manager
+
+
+version: '2.3'
+

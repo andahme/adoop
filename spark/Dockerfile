@@ -1,37 +1,32 @@
-ARG INPUT_SPARK_VERSION=2.2.0
-
-ARG INPUT_SPARK_ARTIFACT=http://apache.spinellicreations.com/spark/spark-${INPUT_SPARK_VERSION}/spark-${INPUT_SPARK_VERSION}-bin-hadoop2.7.tgz
-
-
-# TARGET: DISTRIBUTION
-FROM andahme/debian AS distribution
-
-ARG INPUT_SPARK_ARTIFACT
-
 ARG INPUT_SPARK_VERSION
 
 
-ADD ${INPUT_SPARK_ARTIFACT} /tmp/spark-${INPUT_SPARK_VERSION}.tar.gz
 
-RUN tar -zxf /tmp/spark-${INPUT_SPARK_VERSION}.tar.gz -C /opt --strip-component=1
+FROM andahme/spark:${INPUT_SPARK_VERSION} AS spark
 
-
-
-# TARGET: IMAGE
-FROM andahme/hadoop AS image
-
-ARG INPUT_SPARK_VERSION
+ENV SPARK_PUBLIC_DNS localhost
 
 
-ENV SPARK_HOME=/opt/spark-${INPUT_SPARK_VERSION}
+RUN mkdir /docker-init
 
-ENV PATH=${PATH}:${SPARK_HOME}/bin
+COPY docker-init-core-site.sh /docker-init/docker-init-core-site.sh
+
+COPY docker-init-hive-site.sh /docker-init/docker-init-hive-site.sh
+
+COPY docker-init-spark-defaults.sh /docker-init/docker-init-spark-defaults.sh
+
+COPY docker-init-yarn-site.sh /docker-init/docker-init-yarn-site.sh
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get update \
-    && apt-get install --yes --no-install-recommends python
+RUN useradd --comment "Spark User" --create-home --uid 1011 spark
 
-COPY --from=distribution /opt ${SPARK_HOME}
 
+VOLUME /tmp
+
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+
+CMD [ "/bin/bash" ]
 

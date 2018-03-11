@@ -1,0 +1,148 @@
+services:
+  hadoop:
+    build:
+      args:
+        INPUT_HADOOP_VERSION: ${HADOOP_VERSION}
+      context: .
+      target: hadoop
+    image: adoop/hadoop:${ADOOP_VERSION}
+
+
+  hdfs:
+    depends_on:
+      - hadoop
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hdfs/.
+      target: hdfs
+    image: adoop/hdfs:${ADOOP_VERSION}
+
+  name-node:
+    depends_on:
+      - hdfs
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hdfs/name-node/.
+      target: hdfs-name-node
+
+  secondary-name-node:
+    depends_on:
+      - hdfs
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hdfs/secondary-name-node/.
+      target: hdfs-secondary-name-node
+
+  data-node:
+    depends_on:
+      - hdfs
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hdfs/data-node/.
+      target: hdfs-data-node
+
+  yarn:
+    depends_on:
+      - hadoop
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: yarn/.
+      target: yarn
+    image: adoop/yarn:${ADOOP_VERSION}
+
+  resource-manager:
+    depends_on:
+      - yarn
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: yarn/resource-manager/.
+      target: yarn-resource-manager
+
+  node-manager:
+    depends_on:
+      - yarn
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: yarn/node-manager/.
+      target: yarn-node-manager
+
+
+
+  hive:
+    depends_on:
+      - hadoop
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+        INPUT_HIVE_VERSION: ${HIVE_VERSION}
+      context: hive/.
+      target: hive
+    image: adoop/hive:${ADOOP_VERSION}
+
+
+  hive-metastore:
+    depends_on:
+      - hive
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hive/metastore/.
+      target: hive-metastore
+
+  hive-server:
+    depends_on:
+      - hive
+    build:
+      args:
+        INPUT_ADOOP_VERSION: ${ADOOP_VERSION}
+      context: hive/server/.
+      target: hive-server
+
+
+
+  spark:
+    build:
+      args:
+        INPUT_SPARK_VERSION: ${SPARK_VERSION}
+      context: spark/.
+      target: spark
+    image: adoop/spark:${ADOOP_VERSION}
+
+
+  spark-shell:
+    depends_on:
+      - spark
+    build:
+      args:
+        INPUT_ARSK_VERSION: ${ADOOP_VERSION}
+      context: spark/shell/.
+      target: spark-shell
+
+  spark-master:
+    depends_on:
+      - spark
+    build:
+      args:
+        INPUT_ARSK_VERSION: ${ADOOP_VERSION}
+      context: spark/master/.
+      target: spark-master
+
+  spark-worker:
+    depends_on:
+      - spark
+    build:
+      args:
+        INPUT_ARSK_VERSION: ${ADOOP_VERSION}
+      context: spark/worker/.
+      target: spark-worker
+
+
+version: '2.3'
+
