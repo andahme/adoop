@@ -1,8 +1,12 @@
 # adoop - a Docker based Hadoop distribution
-**NOTE**: This project uses andahme/dccu to manage docker-compose profiles.
 
-### DCCU: Generate docker-compose.override.yml
-> docker-compose $(dccu hdfs yarn hive spark) config > docker-compose.override.yml
+## Quick Start
+
+### Generate docker-compose.override.yml
+**NOTE**: This project uses andahme/dccu to manage docker-compose profiles.
+```bash
+docker-compose $(dccu hdfs yarn hive spark) config > docker-compose.override.yml
+```
 
 ### HDFS
 ```bash
@@ -12,10 +16,12 @@ docker-compose run -T name-node-format && \
   docker-compose run -T init-hdfs-base
 ```
 
-### YARN
-> docker-compose up -d resource-manager node-manager
+### Yarn
+```bash
+docker-compose up -d resource-manager node-manager
+```
 
-### HIVE
+### Hive
 ```bash
 docker-compose up -d metastore-db && \
   docker-compose run -T init-hdfs-hive && \
@@ -24,21 +30,26 @@ docker-compose up -d metastore-db && \
   docker-compose up -d hive-server
 ```
 
-### SPARK
-> docker-compose run -T init-hdfs-spark
-
+### Spark
+```bash
+docker-compose run -T init-hdfs-spark
+```
 
 ## Clients
 
-### SPARK SHELL
-> docker-compose run -p 127.0.0.1:4040:4040 spark-shell
+### Spark Shell
+```bash
+docker-compose run -p 127.0.0.1:4040:4040 spark-shell
+```
 
-### BEELINE
-> docker-compose run beeline
+### Beeline
+```bash
+docker-compose run beeline
+```
 
 
-# TEARDOWN
-> docker-compose rm --stop --force
-
-
+## Teardown
+```bash
+docker-compose rm --stop --force
+```
 
