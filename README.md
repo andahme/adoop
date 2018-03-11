@@ -10,7 +10,7 @@ docker-compose $(dccu hdfs yarn hive spark) config > docker-compose.override.yml
 
 ### Build Image(s)
 ```bash
-docker-compose   -f docker-compose.override.yml   -f docker-compose.build.yml   build
+docker-compose -f docker-compose.override.yml -f docker-compose.build.yml build
 ```
 
 ### HDFS
