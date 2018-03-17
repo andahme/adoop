@@ -2,15 +2,15 @@
 
 ## Quick Start
 
-### Generate docker-compose.override.yml
+### Generate docker-compose.yml
 **NOTE**: This project uses [andahme/dccu](https://github.com/andahme/dccu) to manage docker-compose profiles.
 ```bash
-docker-compose $(dccu hdfs yarn hive spark) config > docker-compose.override.yml
+docker-compose $(dccu hdfs yarn hive spark) config > docker-compose.yml
 ```
 
 ### Build Image(s)
 ```bash
-docker-compose -f docker-compose.override.yml -f docker-compose.build.yml build
+docker-compose -f docker-compose.yml -f docker-compose.build.yml build
 ```
 
 ### HDFS
